@@ -1,13 +1,50 @@
 // Add imports here
-
+const BIP39 = require("bip39")
 
 
 // Add functions here
 
+function generateMnemonic(){
+    return BIP39.generateMnemonic()
+}
 
+var isValid = BIP39.validateMnemonic("Adel's too good for you")
 
+function generateSeed(mnemonic){
+    return BIP39.mnemonicToSeed(mnemonic)
+}
+
+const hdkey = require('ethereumjs-wallet/hdkey')
+
+function generatePrivKey(mnemonic){
+    const seed = generateSeed(mnemonic)
+    return hdkey.fromMasterSeed(seed).derivePath(`m/44'/60'/0'/0/0`).getWallet().getPrivateKey()
+}
+
+const Wallet = require('ethereumjs-wallet')
+
+function derivePubKey(privKey){
+    const wallet = Wallet.fromPrivateKey(privKey)
+    return wallet.getPublicKey()
+}
+
+const keccak256 = require('js-sha3').keccak256;
+
+function deriveEthAddress(pubKey){
+    const address = keccak256(pubKey)
+    return "0x" + address.substring(address.length - 40, address.length)
+}
+const EthereumTx = require('ethereumjs-tx')
+
+function signTx(privKey, txData){
+    const tx = new EthereumTx(txData)
+    tx.sign(privKey)
+    return tx
+}
+function getSignerAddress(signedTx){
+    return "0x" + signedTx.getSenderAddress().toString('hex')
+}
 /*
-
 Do not edit code below this line.
 
 */
