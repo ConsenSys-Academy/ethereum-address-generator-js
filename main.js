@@ -1,11 +1,18 @@
 // Add imports here
-
+const BIP39 = require("bip39")
 
 
 // Add functions here
 
+function generateMnemonic(){
+    return BIP39.generateMnemonic()
+}
 
+var isValid = BIP39.validateMnemonic("Adel's too good for you")
 
+function generateSeed(mnemonic){
+    return BIP39.mnemonicToSeed(mnemonic)
+}
 /*
 
 Do not edit code below this line.
